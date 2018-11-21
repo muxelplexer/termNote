@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/terodom/workspace/programming/cpp/termNote/src/main.cpp
+argp.h
+-
+./include/note.hpp
+/home/terodom/workspace/programming/cpp/termNote/src/./include/note.hpp
+
+/home/terodom/workspace/programming/cpp/termNote/src/note.cpp
+./include/note.hpp
+/home/terodom/workspace/programming/cpp/termNote/src/./include/note.hpp
+
