@@ -1,14 +1,19 @@
 #include "../include/note.hpp"
 
 Note::Note() {
-	
+	std::ifstream fileTest(this->path);
+	if (!fileTest.good()) {
+		std::ofstream file(this->path);
+		file.close();
+	}	
 }	
 
 Note::~Note() {
-
-}
-void Note::add() {
 	
+}
+void Note::add(char* note) {
+	this->noteFile.open(this->path, std::ios::app);
+	noteFile << note << std::endl;
 }
 
 void Note::del(int delLine) {

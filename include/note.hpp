@@ -19,7 +19,7 @@ class Note {
 		Note();
 		~Note();
 
-		void add();
+		void add(char* note);
 		void del(int delLine);
 		void list();
 };
