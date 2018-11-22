@@ -11,8 +11,7 @@
 class Note {
 	private:
 		std::fstream noteFile;
-
-		std::string path = "/home/terodom/.termNote/notes";
+		std::string path = std::strcat(getenv("HOME"), "/.termNote/notes");
 		int delLine;
 		std::string line;
 		std::vector<std::string> buf;

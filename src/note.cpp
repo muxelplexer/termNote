@@ -21,7 +21,7 @@ void Note::list() {
 	while(std::getline(noteFile, line)) {
 		std::string newLine;
 		newLine = line + "\n";
-		std::cout <<"[" << i << "]" << newLine;
+		std::cout <<"[" << i << "]"<< " " << newLine;
 		buf.push_back(newLine);
 		i++;
 	}
