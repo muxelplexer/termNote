@@ -1,3 +1,0 @@
-/home/terodom/workspace/programming/cpp/termNote/CMakeFiles/rebuild_cache.dir
-/home/terodom/workspace/programming/cpp/termNote/CMakeFiles/termNote.dir
-/home/terodom/workspace/programming/cpp/termNote/CMakeFiles/edit_cache.dir
