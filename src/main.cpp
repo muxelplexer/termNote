@@ -1,5 +1,5 @@
 #include <argp.h>
-#include "./include/note.hpp"
+#include "../include/note.hpp"
 
 static int parseOptions(int key, char *arg,
 		struct argp_state *state) {

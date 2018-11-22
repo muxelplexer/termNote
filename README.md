@@ -16,8 +16,8 @@ You will need to have atleast these things:
 I'm going to provide binaries for Linux Destributions later. For now you will have to build the source code.
 
 1. `git clone https://github.com/Terodom/termNote.git`
-2. `cd termNote/`
-3. `cmake CMakeLists.txt`
+2. `cd termNote`
+3. `cmake `
 4. `make`
 
 ## Checklist

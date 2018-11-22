@@ -6,13 +6,23 @@
 
 #IncludeRegexTransform: 
 
-/home/terodom/workspace/programming/cpp/termNote/src/main.cpp
-argp.h
+/home/terodom/workspace/programming/cpp/termNote/include/note.hpp
+iostream
 -
-./include/note.hpp
-/home/terodom/workspace/programming/cpp/termNote/src/./include/note.hpp
+fstream
+-
+string
+-
+cstring
+-
+cstdlib
+-
+vector
+-
+iterator
+-
 
 /home/terodom/workspace/programming/cpp/termNote/src/note.cpp
-./include/note.hpp
-/home/terodom/workspace/programming/cpp/termNote/src/./include/note.hpp
+../include/note.hpp
+/home/terodom/workspace/programming/cpp/termNote/include/note.hpp
 

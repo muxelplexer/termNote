@@ -1,14 +1,14 @@
-#include "./include/note.hpp"
+#include "../include/note.hpp"
 
 Note::Note() {
-	path = std::strcat(getenv("$HOME"), "./termNote/");
+	
 }	
 
 Note::~Note() {
 
 }
 void Note::add() {
-
+	
 }
 
 void Note::del(int delLine) {
@@ -16,10 +16,14 @@ void Note::del(int delLine) {
 }
 
 void Note::list() {
-	this->noteFile.open(std::string(path + "notes"), std::ios::in);
-	noteFile >> buf;
-	for(auto i = buf.begin(); i != buf.end(); ++i) {
-		std::cout << *i;
+	this->noteFile.open(this->path, std::ios::in);
+	int i = 0;
+	while(std::getline(noteFile, line)) {
+		std::string newLine;
+		newLine = line + "\n";
+		std::cout <<"[" << i << "]" << newLine;
+		buf.push_back(newLine);
+		i++;
 	}
 	this->noteFile.close();
 }

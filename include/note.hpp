@@ -6,13 +6,16 @@
 #include <cstring>	/* strcat */
 #include <cstdlib>	/* getenv */
 #include <vector>
+#include <iterator>
 
 class Note {
 	private:
 		std::fstream noteFile;
-		std::string path;
+
+		std::string path = "/home/terodom/.termNote/notes";
 		int delLine;
-		std::vector<char> buf;
+		std::string line;
+		std::vector<std::string> buf;
 	public:
 		Note();
 		~Note();
