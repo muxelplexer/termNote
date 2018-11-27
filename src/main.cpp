@@ -11,6 +11,9 @@ static int parseOptions(int key, char *arg,
 		case 'd':
 			note->del(std::strtol(arg, nullptr, 0));
 			break;
+		case 'l':
+			note->list();
+			break;
 	}
 	return 0;
 }
