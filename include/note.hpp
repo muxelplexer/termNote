@@ -11,10 +11,13 @@
 class Note {
 	private:
 		std::fstream noteFile;
-		std::string path = std::strcat(getenv("HOME"), "/.termNote/notes");
+		std::fstream tempFile;
+		
+		std::string tempPath = std::string(std::getenv("HOME")) + "/.termNote/tempNotes";
+		std::string path = std::string(std::getenv("HOME")) + "/.termNote/notes";
 		int delLine;
 		std::string line;
-		std::vector<std::string> buf;
+		
 	public:
 		Note();
 		~Note();

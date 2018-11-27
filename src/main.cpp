@@ -9,6 +9,7 @@ static int parseOptions(int key, char *arg,
 			note->add(arg);
 			break;
 		case 'd':
+			note->del(std::strtol(arg, nullptr, 0));
 			break;
 	}
 	return 0;
@@ -22,7 +23,6 @@ int main(int argc, char **argv) {
 		struct argp_option options[] = {
 		{"add", 'a', "string", 0, "Add an entry"},
 		{"delete", 'd', "int", 0, "Delete [n]th entry"},
-		{"list", 'l', 0, "List the Notes"},
 		{ 0 }
 		};
 		struct argp argp = { options, parseOptions };

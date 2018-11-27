@@ -22,8 +22,8 @@ I'm going to provide binaries for Linux Destributions later. For now you will ha
 
 ## Checklist
 
-- [ ] List Notes
-- [ ] Add Notes
-- [ ] Remove Notes
+- [x] List Notes
+- [x] Add Notes
+- [x] Remove Notes
 - [ ] Add Functionality of Due Dates
 - [ ] Make Config File
