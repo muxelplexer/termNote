@@ -1,6 +1,9 @@
 #include "../include/note.hpp"
 
-Note::Note() {;
+Note::Note() {
+	if(fs::exists(this->noteDir) != 1) {
+		fs::create_directory(this->noteDir);
+	}
 	std::ifstream fileTest(this->path);
 	if (!fileTest.good()) {
 		std::ofstream file(this->path);

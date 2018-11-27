@@ -3,16 +3,17 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cstring>	/* strcat */
 #include <cstdlib>	/* getenv */
 #include <vector>
-#include <iterator>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 class Note {
 	private:
 		std::fstream noteFile;
 		std::fstream tempFile;
-		
+		std::string noteDir = std::string(std::getenv("HOME")) + "/.termNote/";
 		std::string tempPath = std::string(std::getenv("HOME")) + "/.termNote/tempNotes";
 		std::string path = std::string(std::getenv("HOME")) + "/.termNote/notes";
 		int delLine;
