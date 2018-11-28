@@ -14,8 +14,8 @@ class Note {
 		std::fstream noteStream;
 		std::fstream tempStream;
 		std::string noteDir = std::string(std::getenv("HOME")) + "/.termNote/";
-		std::string tempFile = noteDir + "/tempNotes";
-		std::string file = noteDir + "/notes";
+		std::string tempFile = noteDir + "tempNotes";
+		std::string file = noteDir + "notes";
 		int delLine;
 		std::string line;
 		
