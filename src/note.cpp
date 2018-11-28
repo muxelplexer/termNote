@@ -4,45 +4,51 @@ Note::Note() {
 	if(fs::exists(this->noteDir) != 1) {
 		fs::create_directory(this->noteDir);
 	}
-	std::ifstream fileTest(this->path);
-	if (!fileTest.good()) {
-		std::ofstream file(this->path);
-		file.close();
+
+	std::ifstream iFileTest(this->file);
+	if (!iFileTest.good()) {
+		std::ofstream oFileTest(this->file);
+		oFileTest.close();
 	}	
-	fileTest.close();
+	iFileTest.close();
 }	
 
 Note::~Note() {
 	
 }
+
 void Note::add(char* note) {
-	this->noteFile.open(this->path, std::ios::app);
-	noteFile << note << std::endl;
+	this->noteStream.open(this->file, std::ios::app);
+	noteStream << note << std::endl;
 }
 
 void Note::del(int delLine) {
-	this->noteFile.open(this->path, std::ios::in);
-	this->tempFile.open(this->tempPath, std::ios::out);
+
+	this->noteStream.open(this->file, std::ios::in);
+	this->tempStream.open(this->tempFile, std::ios::out);
+	
 	int i = 0;
-	while(std::getline(noteFile, line)) {
+	while(std::getline(noteStream, line)) {
 		if(i != delLine) {
-			tempFile << line << "\n";
+			tempStream << line << "\n";
 		}
 		i++;
 	}
-	noteFile.close();
-	tempFile.close();
-	remove(this->path.c_str());
-	rename(this->tempPath.c_str(),this->path.c_str());
+	
+	noteStream.close();
+	tempStream.close();
+	remove(this->file.c_str());
+	rename(this->tempFile.c_str(),this->file.c_str());
 }
 void Note::list() {
-	noteFile.open(path, std::ios::in);
+	noteStream.open(file, std::ios::in);
 	int i = 0;
-	while(std::getline(noteFile, line)) {
+	while(std::getline(noteStream, line)) {
 		std::string newLine;
 		newLine = line + "\n";
 		std::cout <<"[" << i << "]"<< " " << newLine;
 		i++;
 	}
-	noteFile.close();
+	std::cout << std::endl;
+	noteStream.close();
 }

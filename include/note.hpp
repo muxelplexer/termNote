@@ -11,11 +11,11 @@ namespace fs = std::filesystem;
 
 class Note {
 	private:
-		std::fstream noteFile;
-		std::fstream tempFile;
+		std::fstream noteStream;
+		std::fstream tempStream;
 		std::string noteDir = std::string(std::getenv("HOME")) + "/.termNote/";
-		std::string tempPath = std::string(std::getenv("HOME")) + "/.termNote/tempNotes";
-		std::string path = std::string(std::getenv("HOME")) + "/.termNote/notes";
+		std::string tempFile = noteDir + "/tempNotes";
+		std::string file = noteDir + "/notes";
 		int delLine;
 		std::string line;
 		
