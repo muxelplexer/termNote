@@ -11,7 +11,8 @@ termNote is going to be a full fledged terminal notes application with funcional
 You will need to have atleast these things:
 
 - `cmake 3.12.1`
-- `gcc`
+- `gcc 7+`
+- `argp`
 
 ---
 
