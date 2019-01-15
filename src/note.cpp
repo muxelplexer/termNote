@@ -1,10 +1,11 @@
 #include "../include/note.hpp"
 
 Note::Note() {
+	// Look if termNote directories and files exist, if not then create them
 	if(fs::exists(this->noteDir) != 1) {
 		fs::create_directory(this->noteDir);
 	}
-
+	
 	std::ifstream iFileTest(this->file);
 	if (!iFileTest.good()) {
 		std::ofstream oFileTest(this->file);
@@ -49,6 +50,5 @@ void Note::list() {
 		std::cout <<"[" << i << "]"<< " " << newLine;
 		i++;
 	}
-	std::cout << std::endl;
 	noteStream.close();
 }
