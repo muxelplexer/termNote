@@ -2,7 +2,7 @@ with import <nixpkgs> {};
 stdenv.mkDerivation rec
 {
   name = "termNote";
-  src = ../termNote;
+  src = ./.;
   unpackPhase = "";
   buildInputs = [ gcc cmake ];
 }
