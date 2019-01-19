@@ -3,6 +3,5 @@ stdenv.mkDerivation rec
 {
   name = "termNote";
   src = ./.;
-  unpackPhase = "";
   buildInputs = [ gcc cmake ];
 }
