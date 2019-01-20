@@ -9,6 +9,7 @@
 	#include <filesystem>
 	namespace fs = std::filesystem;
 #endif
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <string>
