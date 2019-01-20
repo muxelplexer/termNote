@@ -15,6 +15,10 @@
 #include <cstdlib>	/* getenv */
 #include <vector>
 
+#define HOME std::getenv("HOME")
+#define XDG_CONFIG_HOME std::getenv("XDG_CONFIG_HOME")
+#define XDG_DATA_HOME std::getenv("XDG_DATA_HOME")
+
 class Note {
 	private:
 		// Filestreams
@@ -22,8 +26,8 @@ class Note {
 		std::fstream tempStream;
 		
 		// Files and Directories
-		std::string configDir = std::string(std::getenv("HOME")) + "/.config/termNote/";
-		std::string noteDir = std::string(std::getenv("HOME")) + "/.termNote/";
+    std::string configDir = XDG_CONFIG_HOME ? std::string(XDG_CONFIG_HOME) + "/termNote/" : std::string(HOME) + "/.config/termNote/";
+    std::string noteDir = XDG_DATA_HOME ? std::string(XDG_DATA_HOME) + "/termNote/" : std::string(HOME) + "/.termNote/";
 		std::string tempFile = noteDir + "tempNotes";
 		std::string file = noteDir + "notes";
 		std::string configFile = configDir + "config";
