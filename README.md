@@ -22,6 +22,14 @@ You will need to have atleast these things:
 
 Either install it directly from the AUR or use an AUR helper like trizen  
 `trizen -S termNote-git`
+### Nix
+```bash
+nix-shell -p 'import (builtins.fetchGit {url="https://github.com/Terodom/termNote"; ref="master";})'
+```
+or
+```bash
+git clone https://github.com/Terodom/termNote && cd termNote && nix-build
+```
 
 ### Source
 
