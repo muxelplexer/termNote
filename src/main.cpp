@@ -1,7 +1,8 @@
 #include <argp.h>
 #include "../include/note.hpp"
 
-Note *note = new Note();
+std::unique_ptr<Note> note = std::make_unique<Note>();
+
 static int parseOptions(int key, char *arg,
 		struct argp_state *state) {
 	switch(key) {
