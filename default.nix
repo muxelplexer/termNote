@@ -3,5 +3,6 @@ stdenv.mkDerivation rec
 {
   name = "termNote";
   src = ./.;
-  buildInputs = [ gcc cmake ];
+  nativeBuildInputs = [ cmake pkgconfig ];
+  buildInputs = [ libnotify gdk_pixbuf pcre ];
 }

@@ -15,6 +15,8 @@
 #include <string>
 #include <cstdlib>	/* getenv */
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #define HOME std::getenv("HOME")
 #define XDG_CONFIG_HOME std::getenv("XDG_CONFIG_HOME")
@@ -42,4 +44,5 @@ class Note {
 		void add(char* note);
 		void del(int delLine);
 		void list();
+    std::vector<std::string> getList();
 };
