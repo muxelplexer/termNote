@@ -53,12 +53,3 @@ void Note::list() {
 	}
 	noteStream.close();
 }
-
-std::vector<std::string> Note::getList() {
-	noteStream.open(file, std::ios::in);
-  std::vector<std::string> result;
-	while(std::getline(noteStream, line))
-    result.push_back(line);
-  noteStream.close();
-  return result;
-}
