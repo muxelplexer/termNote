@@ -13,6 +13,7 @@ You will need to have atleast these things:
 - `cmake 3.6`
 - `gcc 7+`
 - `argp`
+- `libnotify`
 
 ---
 
@@ -47,5 +48,5 @@ This will install it to /usr/local/bin/
 - [x] List Notes
 - [x] Add Notes
 - [x] Remove Notes
-- [ ] Add Functionality of Due Dates
+- [x] Add Functionality of Due Dates
 - [ ] Make Config File

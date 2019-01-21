@@ -42,4 +42,5 @@ class Note {
 		void add(char* note);
 		void del(int delLine);
 		void list();
+    std::vector<std::string> getList();
 };
