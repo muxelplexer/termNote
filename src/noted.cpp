@@ -2,16 +2,11 @@
 #include <iostream>
 #include <libnotify/notify.h>
 #include "../include/note.hpp"
-#include <stdlib.h>
 #include <stdio.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/inotify.h>
-#include <limits.h>
 #include <chrono>
 #include <thread>
 #include <ctime>
-#define NOTE_DUE "One of your notes just reached its due time!"
+const char* NOTE_DUE = "One of your notes just reached its due time!";
 
 
 std::unique_ptr<Note> note = std::make_unique<Note>();
