@@ -1,7 +1,7 @@
 #pragma once
 #define GCC_VERSION (__GNUC__ * 10000 \
-                     + __GNUC_MINOR__ * 100 \
-                     + __GNUC_PATCHLEVEL__)
+										 + __GNUC_MINOR__ * 100 \
+										 + __GNUC_PATCHLEVEL__)
 #if GCC_VERSION < 80000
 	#include <experimental/filesystem>
 	namespace fs = std::experimental::filesystem;
@@ -27,8 +27,8 @@ class Note {
 		std::fstream tempStream;
 		
 		// Files and Directories
-    std::string configDir = XDG_CONFIG_HOME ? std::string(XDG_CONFIG_HOME) + "/termNote/" : std::string(HOME) + "/.config/termNote/";
-    std::string noteDir = XDG_DATA_HOME ? std::string(XDG_DATA_HOME) + "/termNote/" : std::string(HOME) + "/.termNote/";
+		std::string configDir = XDG_CONFIG_HOME ? std::string(XDG_CONFIG_HOME) + "/termNote/" : std::string(HOME) + "/.config/termNote/";
+		std::string noteDir = XDG_DATA_HOME ? std::string(XDG_DATA_HOME) + "/termNote/" : std::string(HOME) + "/.termNote/";
 		std::string tempFile = noteDir + "tempNotes";
 		std::string file = noteDir + "notes";
 		std::string configFile = configDir + "config";
@@ -42,5 +42,5 @@ class Note {
 		void add(char* note);
 		void del(int delLine);
 		void list();
-    std::vector<std::string> getList();
+		std::vector<std::string> getList();
 };
