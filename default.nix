@@ -1,7 +1,9 @@
 with import <nixpkgs> {};
+
 stdenv.mkDerivation rec
 {
-  name = "termNote";
-  src = ./.;
-  buildInputs = [ gcc cmake ];
+	name = "termNote";
+	src = ./.;
+	nativeBuildInputs = [ cmake pkgconfig ];
+	buildInputs = [ libnotify gdk_pixbuf pcre ];
 }
