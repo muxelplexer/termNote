@@ -35,11 +35,8 @@ int main(int argc, char **argv) {
     else {
         struct argp_option options[] = {
         {"add", 'a', "string", 0, "Add an entry"},
-<<<<<<< HEAD
         {"delete", 'd', "int", 0, "Delete [n]th entry"},
-=======
         {"delete", 'd', "list", 0, "Delete [n]th entries"},
->>>>>>> adcc15563c2b18da5b5b61cd6d769cc426b475d6
         {"list", 'l', 0, 0, "List all entries"},
         { 0 }
         };
