@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "../include/note.hpp"
 
 Note::Note() {
@@ -23,14 +24,16 @@ void Note::add(char* note) {
     noteStream << note << std::endl;
 }
 
-void Note::del(int delLine) {
+void Note::del(std::vector<int> numbers) {
+    std::sort(numbers.begin(), numbers.end());
     this->noteStream.open(this->file, std::ios::in);
     this->tempStream.open(this->tempFile, std::ios::out);
     int i = 0;
+    int j = 0;
     while(std::getline(noteStream, line)) {
-        if(i != delLine) {
+        if(i != numbers[j]) {
             tempStream << line << "\n";
-        }
+        } else j++;
         i++;
     }
     noteStream.close();

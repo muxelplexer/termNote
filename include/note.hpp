@@ -40,7 +40,7 @@ class Note {
         ~Note();
 
         void add(char* note);
-        void del(int delLine);
+        void del(std::vector<int> numbers);
         void list();
         std::vector<std::string> getList();
 };
