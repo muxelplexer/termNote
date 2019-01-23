@@ -21,7 +21,7 @@ You will need to have atleast these things:
 
 ### Arch
 
-Either install it directly from the AUR or use an AUR helper like trizen\
+Either install it directly from the AUR or use an AUR helper like trizen
 ```bash
 trizen -S termNote-git
 ```
@@ -49,6 +49,9 @@ cmake .
 make
 ```
 This will install it to /usr/local/bin/
+
+#### Tests
+Run `./test.sh` in any POSIX-copmliant shell to run tests. This is done automatically when built with Nix.
 
 * * *
 
