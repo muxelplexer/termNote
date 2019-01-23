@@ -21,25 +21,26 @@
 #define XDG_DATA_HOME std::getenv("XDG_DATA_HOME")
 
 class Note {
-    private:
-        // Filestreams
-        std::fstream noteStream;
-        std::fstream tempStream;
+private:
+    // Filestreams
+    std::fstream noteStream;
+    std::fstream tempStream;
         
-        // Files and Directories
-        std::string configDir = XDG_CONFIG_HOME ? std::string(XDG_CONFIG_HOME) + "/termNote/" : std::string(HOME) + "/.config/termNote/";
-        std::string noteDir = XDG_DATA_HOME ? std::string(XDG_DATA_HOME) + "/termNote/" : std::string(HOME) + "/.termNote/";
-        std::string tempFile = noteDir + "tempNotes";
-        std::string file = noteDir + "notes";
-        std::string configFile = configDir + "config";
-
-        std::string line;
-    public:
-        Note();
-        ~Note();
-
-        void add(char* note);
-        void del(std::vector<int> numbers);
-        void list();
-        std::vector<std::string> getList();
+    // Files and Directories
+    std::string configDir = XDG_CONFIG_HOME ? std::string(XDG_CONFIG_HOME) + "/termNote/" : std::string(HOME) + "/.config/termNote/";
+    std::string noteDir = XDG_DATA_HOME ? std::string(XDG_DATA_HOME) + "/termNote/" : std::string(HOME) + "/.termNote/";
+    std::string tempFile = noteDir + "tempNotes";
+    std::string file = noteDir + "notes";
+    std::string configFile = configDir + "config";
+    
+    std::string line;
+public:
+    Note();
+    ~Note();
+    
+    void add(char* note);
+    void del(std::vector<int> numbers);
+    void list();
+    void show(int n);
+    std::vector<std::string> getList();
 };

@@ -1,5 +1,0 @@
-((nil . ((indent-tabs-mode . nil)
-         (tab-width . 4)
-         (setq indent-line-function 'insert-tab)
-         (setq-default c-basic-offset 4)
-         ())

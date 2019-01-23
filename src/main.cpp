@@ -12,6 +12,9 @@ static int parseOptions(int key, char *arg,
         case 'a':
             note->add(arg);
             break;
+        case 's':
+            note->show(std::strtol(arg, nullptr, 0));
+            break;
         case 'd':
             std::vector<int> numbers;
             std::stringstream ss(arg);
@@ -38,6 +41,7 @@ int main(int argc, char **argv) {
         {"delete", 'd', "int", 0, "Delete [n]th entry"},
         {"delete", 'd', "list", 0, "Delete [n]th entries"},
         {"list", 'l', 0, 0, "List all entries"},
+        {"show", 's', "int", 0, "Show [n]th entry"},
         { 0 }
         };
         struct argp argp = { options, parseOptions };
