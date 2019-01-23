@@ -7,5 +7,5 @@ stdenv.mkDerivation rec
 	nativeBuildInputs = [ cmake pkgconfig ];
 	buildInputs = [ libnotify gdk_pixbuf pcre ];
   doCheck = true;
-  checkPhase = ./test.sh;
+  checkPhase = builtins.readFile ./test.sh;
 }
