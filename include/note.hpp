@@ -32,8 +32,7 @@ class Note {
         std::string tempFile = noteDir + "tempNotes";
         std::string file = noteDir + "notes";
         std::string configFile = configDir + "config";
-            
-        int delLine;
+
         std::string line;
     public:
         Note();
