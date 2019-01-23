@@ -41,6 +41,7 @@ void Note::del(std::vector<int> numbers) {
     remove(this->file.c_str());
     rename(this->tempFile.c_str(),this->file.c_str());
 }
+
 void Note::list() {
     noteStream.open(file, std::ios::in);
     int i = 0;
@@ -50,6 +51,16 @@ void Note::list() {
         std::cout <<"[" << i << "]"<< " " << newLine;
         i++;
     }
+    noteStream.close();
+}
+
+void Note::show(int n) {
+    noteStream.open(file, std::ios::in);
+    int i = 0;
+    while(std::getline(noteStream, line) && i < n) {
+        i++;
+    }
+    std::cout << line << std::endl;
     noteStream.close();
 }
 
