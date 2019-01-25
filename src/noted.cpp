@@ -6,34 +6,8 @@
 #include <chrono>
 #include <thread>
 #include <ctime>
+#include <iomanip>
 const char* NOTE_DUE = "One of your notes just reached its due time!";
-
-char monthNames[][4] =
-    {
-     "jan",
-     "feb",
-     "mar",
-     "apr",
-     "may",
-     "jun",
-     "jul",
-     "aug",
-     "sep",
-     "oct",
-     "nov",
-     "dec"
-    };
-
-char weekDays[][4] =
-    {
-     "mon",
-     "tue",
-     "wed",
-     "thu",
-     "fri",
-     "sat",
-     "sun"
-    };
 
 
 std::unique_ptr<Note> note = std::make_unique<Note>();
@@ -42,121 +16,89 @@ bool validTime(int hour, int min) {
     return hour >= 0 && hour < 24 && min >= 0 && min < 60;
 }
 
-struct date {
-    int year = -1;
-    int month = -1;
-    int day = -1;
-    int weekday = -1;
-};
-
 int notifyOnDue(bool verbose) {
     notify_init("termNote");
     if (verbose) {
         std::cout << "List of notes:" << std::endl;
         note->list();
     }
+    
     while(1) {
         auto notes = note->getList();
         for (auto n: notes) {
+            if (verbose) std::cout << n << std::endl;
             int i = 0;
-            std::vector<std::pair<int, int>> parsedTimeSpecs;
-            std::vector<struct date> parsedDateSpecs;
-            while (i < n.size() - 4) {
-                int hour = -1, min = -1;
-                int year = -1, month = -1, day = -1;
-                // Parse time
-                auto buf = n.substr(i, std::string::npos).c_str();
-                if (sscanf(buf, "%2d:%2d", &hour, &min) == 2 && validTime(hour, min)) {
-                    parsedTimeSpecs.push_back({hour, min});
-                    i += 5;
-                }
-                else if (sscanf(buf, "%dAM", &hour) == 1 && validTime(hour, 0)) {
-                    parsedTimeSpecs.push_back({hour, 0});
-                    i += 3;
-                }
-                else if (sscanf(buf, "%dPM", &hour) == 1 && validTime(hour + 12, 0)) {
-                    parsedTimeSpecs.push_back({hour + 12, 0});
-                    i += 3;
-                }
-                
-                // Parse date
-                
-                
-                // Parse full date (DD.MM.YYYY)
-                if (sscanf(buf, "%2d.%2d.%4d", &day, &month, &year) == 3) {
-                    parsedDateSpecs.push_back({year, month, day, -1});
-                    i += 10;
-                }
-                // Parse DD.MM
-                else if (sscanf(buf, "%2d.%2d", &day, &month) == 2) {
-                    parsedDateSpecs.push_back({-1, month, day, -1});
-                    i += 5;
-                }
-                // Parse worded date definitions
-                else {
-                    std::vector<int> months, weekdays;
-                    std::string s = n.substr(i, 4);
-                    while (s[0] == ' ') {
-                        auto name = n.substr(i + 1, 3);
-                        i += 4;
-                        for (int i = 0; i < 12; i++)
-                            if (monthNames[i] == name) {
-                                months.push_back(i + 1);
-                                break;
-                            }
-                        for (int i = 0; i < 7; i++)
-                            if (weekDays[i] == name) {
-                                weekdays.push_back(i + 1);
-                                break;
-                            }
-                        if (i + 5 >= n.size()) break;
-                        s = n.substr(i + 1, 3);
-                    }
-                    if (months.size() == 0)
-                        for (auto & w: weekdays)
-                            parsedDateSpecs.push_back({-1, -1, -1, w});
-                    if (weekdays.size() == 0)
-                        for (auto & m: months)
-                            parsedDateSpecs.push_back({-1, m, -1, -1});
-                    for (auto & m: months)
-                        for (auto & w: weekdays)
-                            parsedDateSpecs.push_back({-1, m, -1, w});
-                }
-                
-                i++;
-            };
-            if ((n[0] == 'x' && n[1] == ' ') || (parsedDateSpecs.size() == 0 && parsedTimeSpecs.size() == 0)) continue;
+            std::vector<std::vector<struct tm>> specs;
+            std::istringstream ss(n), buf;
+            std::string s;
+
+            
+#define READ_DATE_TO(tovec, fmt)                       \
+            buf = std::istringstream(s);\
+            unit = {-1, -1, -1, -1, -1, -1, -1, -1, -1};\
+            buf >> std::get_time(&unit, fmt);\
+            if (!buf.fail()) {\
+                tovec.push_back(unit);\
+                continue;\
+            }
+#define READ_DATE(fmt) READ_DATE_TO(spec, fmt)
+
+            while (ss) {
+                std::vector<tm> spec;
+                while (ss.peek() == ' ' && ss >> s) {
+                    tm unit;
+                    READ_DATE("%d.%m.%y");
+                    READ_DATE("%d.%m");
+                    READ_DATE("%R");
+                    READ_DATE("%b");
+                    READ_DATE("%a");
+                };
+                ss.ignore();
+                if (spec.size() > 0) specs.push_back(spec);
+            }
+            if ((n[0] == 'x' && n[1] == ' ') || specs.size() == 0) continue;
             auto t_now = time(0);
             tm *now = localtime(&t_now);
-            bool dateMatches = false, timeMatches = false;
-            if (parsedDateSpecs.size() == 0) dateMatches = true;
-            else 
-                for (auto & date: parsedDateSpecs) {
-                    if (verbose) std::cout << "Date spec: y" << date.year << " m" << date.month << " d" << date.day << " w" << date.weekday << std::endl;
-                    if ((date.year == -1 || date.year == now->tm_year + 1900)
-                        && (date.month == -1 || date.month == now->tm_mon + 1)
-                        && (date.day == -1 || date.day == now->tm_mday + 1)
-                        && (date.weekday == -1 || date.weekday % 7 == now->tm_wday))
-                        {
-                            dateMatches = true;
-                            if (verbose) std::cout << "Date matches" << std::endl;
-                            break;
-                        }
-                }
-            if (parsedTimeSpecs.size() == 0) parsedTimeSpecs.push_back({00, 00});
-            for (auto & time: parsedTimeSpecs) {
-                if (verbose) std::cout << "Time spec: " << time.first << ":" << time.second << std::endl;
-                if (std::abs(time.first * 3600 + time.second * 60 -
-                             (now->tm_hour * 3600 + now->tm_min * 60))
-                    <= 60)
-                    {
-                        timeMatches = true;
-                        if (verbose) std::cout << "Time matches" << std::endl;
+            bool doNotify = false;
+            if (verbose) std::cout << "  This note has " << specs.size() << " specs total" << std::endl;
+            for (auto & spec: specs) {
+                bool anyTimeMatch = false, allDatesMatch = true;
+                for (auto & unit: spec) {
+                    if (verbose) std::cout << std::put_time(&unit, "    %Y.%m.%d %R (%A, %B) ");
+                    if (unit.tm_min == -1) {
+                        unit.tm_min = 0;
+                    }
+                    bool timeMatches = (
+                                        ((unit.tm_hour == -1) ||
+                                         unit.tm_hour == now->tm_hour) &&
+                                        unit.tm_min == now->tm_min
+                                        );
+                    
+                    bool dateMatches = (
+                                        (
+                                         (unit.tm_year == -1 || unit.tm_year == now->tm_year) &&
+                                         (unit.tm_mon == -1 || unit.tm_mon == now->tm_mon)
+                                         ) &&
+                                        (
+                                         (unit.tm_mday == -1 || unit.tm_mday == now->tm_mday) ||
+                                         (unit.tm_wday == -1 || unit.tm_wday == now->tm_wday)
+                                        )
+                                        );
+                    
+                    std::cout << "Match: T" << timeMatches << "D" << dateMatches << std::endl;
+                    if (!dateMatches) {
+                        allDatesMatch = false;
                         break;
                     }
+                    if (timeMatches) anyTimeMatch = true;
+                }
+                if (verbose) std::cout << "  Match: T" << anyTimeMatch << "D" << allDatesMatch << std::endl;
+                if (allDatesMatch && anyTimeMatch) {
+                    doNotify = true;
+                    break;
+                }
             }
-            if (verbose) printf("This note has %d definitions total\n", parsedTimeSpecs.size() * parsedDateSpecs.size());
-            if (timeMatches && dateMatches) {
+            if (doNotify) {
                 NotifyNotification* notif = notify_notification_new (NOTE_DUE, n.c_str(), 0);
                 notify_notification_set_timeout(notif, 10000); // 10 seconds
                 if (!notify_notification_show(notif, 0)) {
