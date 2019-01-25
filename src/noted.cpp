@@ -29,28 +29,30 @@ int notifyOnDue(bool verbose) {
             std::string s;
 
             
-#define READ_DATE_TO(tovec, fmt)                       \
+#define READ_DATE_TO(tovec, fmt)\
             buf = std::istringstream(s);\
             unit = {-1, -1, -1, -1, -1, -1, -1, -1, -1};\
             buf >> std::get_time(&unit, fmt);\
             if (!buf.fail()) {\
+                read = true;\
                 tovec.push_back(unit);\
                 continue;\
             }
 #define READ_DATE(fmt) READ_DATE_TO(spec, fmt)
 
-            while (ss) {
+            while (!ss.eof())  {
                 std::vector<tm> spec;
                 ss >> s;
+                bool read;
                 do {
+                    read = false;
                     tm unit;
                     READ_DATE("%d.%m.%y");
                     READ_DATE("%d.%m");
                     READ_DATE("%R");
                     READ_DATE("%b");
                     READ_DATE("%a");
-                } while (ss.peek() == ' ' && ss >> s);
-                ss.ignore();
+                } while (read && ss.peek() == ' ' && ss >> s);
                 if (spec.size() > 0) specs.push_back(spec);
             }
             if ((n[0] == 'x' && n[1] == ' ') || specs.size() == 0) continue;
@@ -60,8 +62,9 @@ int notifyOnDue(bool verbose) {
             if (verbose) std::cout << "  This note has " << specs.size() << " specs total" << std::endl;
             for (auto & spec: specs) {
                 bool anyTimeMatch = false, allDatesMatch = true;
+                std::cout << "    Spec of size " << spec.size() << std::endl;
                 for (auto & unit: spec) {
-                    if (verbose) std::cout << std::put_time(&unit, "    %Y.%m.%d %R (%A, %B) ");
+                    if (verbose) std::cout << std::put_time(&unit, "      %Y.%m.%d %R (%A, %B) ");
                     if (unit.tm_min == -1) {
                         unit.tm_min = 0;
                     }
@@ -77,7 +80,7 @@ int notifyOnDue(bool verbose) {
                                          (unit.tm_mon == -1 || unit.tm_mon == now->tm_mon)
                                          ) &&
                                         (
-                                         (unit.tm_mday == -1 || unit.tm_mday == now->tm_mday) ||
+                                         (unit.tm_mday == -1 || unit.tm_mday == now->tm_mday) &&
                                          (unit.tm_wday == -1 || unit.tm_wday == now->tm_wday)
                                         )
                                         );
@@ -89,7 +92,7 @@ int notifyOnDue(bool verbose) {
                     }
                     if (timeMatches) anyTimeMatch = true;
                 }
-                if (verbose) std::cout << "  Match: T" << anyTimeMatch << "D" << allDatesMatch << std::endl;
+                if (verbose) std::cout << "    Match: T" << anyTimeMatch << "D" << allDatesMatch << std::endl;
                 if (allDatesMatch && anyTimeMatch) {
                     doNotify = true;
                     break;
