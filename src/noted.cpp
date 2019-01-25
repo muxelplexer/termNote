@@ -18,10 +18,6 @@ bool validTime(int hour, int min) {
 
 int notifyOnDue(bool verbose) {
     notify_init("termNote");
-    if (verbose) {
-        std::cout << "List of notes:" << std::endl;
-        note->list();
-    }
     
     while(1) {
         auto notes = note->getList();
@@ -45,14 +41,15 @@ int notifyOnDue(bool verbose) {
 
             while (ss) {
                 std::vector<tm> spec;
-                while (ss.peek() == ' ' && ss >> s) {
+                ss >> s;
+                do {
                     tm unit;
                     READ_DATE("%d.%m.%y");
                     READ_DATE("%d.%m");
                     READ_DATE("%R");
                     READ_DATE("%b");
                     READ_DATE("%a");
-                };
+                } while (ss.peek() == ' ' && ss >> s);
                 ss.ignore();
                 if (spec.size() > 0) specs.push_back(spec);
             }
