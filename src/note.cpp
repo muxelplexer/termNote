@@ -9,7 +9,7 @@ Note::Note() {
     std::ifstream iFileTest(this->file);
     if (!iFileTest.good()) {
         std::ofstream oFileTest(this->file);
-        oFileTest << "This is a sample note. You can run `termNote --help` to get help. ";
+        oFileTest << "This is a sample note. You can run `termNote --help` to get help." << std::endl;
         oFileTest.close();
     }
     iFileTest.close();

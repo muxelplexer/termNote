@@ -6,34 +6,98 @@
 #include <chrono>
 #include <thread>
 #include <ctime>
+#include <iomanip>
 const char* NOTE_DUE = "One of your notes just reached its due time!";
 
 
 std::unique_ptr<Note> note = std::make_unique<Note>();
 
+bool validTime(int hour, int min) {
+    return hour >= 0 && hour < 24 && min >= 0 && min < 60;
+}
+
 int notifyOnDue(bool verbose) {
     notify_init("termNote");
-    if (verbose) {
-        std::cout << "List of notes:" << std::endl;
-        note->list();
-    }
+    
     while(1) {
         auto notes = note->getList();
         for (auto n: notes) {
+            if (verbose) std::cout << n << std::endl;
             int i = 0;
-            int hour = -1, min = -1, sec = -1;
-            while ((sscanf(n.substr(i, std::string::npos).c_str(), "%2d:%2d", &hour, &min) != 2 ) &&
-                         i < n.size() - 1
-                         ) i++;
-            if (sec == -1) sec = 0;
-            if (hour == -1 || min == -1) continue;
-            if (verbose) printf("This note is scheduled on %2d:%2d:%2d\n", hour, min, sec);
+            std::vector<std::vector<struct tm>> specs;
+            std::istringstream ss(n), buf;
+            std::string s;
+
+            
+#define READ_DATE_TO(tovec, fmt)\
+            buf = std::istringstream(s);\
+            unit = {-1, -1, -1, -1, -1, -1, -1, -1, -1};\
+            buf >> std::get_time(&unit, fmt);\
+            if (!buf.fail()) {\
+                read = true;\
+                tovec.push_back(unit);\
+                continue;\
+            }
+#define READ_DATE(fmt) READ_DATE_TO(spec, fmt)
+
+            while (!ss.eof())  {
+                std::vector<tm> spec;
+                ss >> s;
+                bool read;
+                do {
+                    read = false;
+                    tm unit;
+                    READ_DATE("%d.%m.%y");
+                    READ_DATE("%d.%m");
+                    READ_DATE("%R");
+                    READ_DATE("%b");
+                    READ_DATE("%a");
+                } while (read && ss.peek() == ' ' && ss >> s);
+                if (spec.size() > 0) specs.push_back(spec);
+            }
+            if ((n[0] == 'x' && n[1] == ' ') || specs.size() == 0) continue;
             auto t_now = time(0);
             tm *now = localtime(&t_now);
             bool doNotify = false;
-            if (std::abs(hour * 3600 + min * 60 + sec -
-                            (now->tm_hour * 3600 + now->tm_min * 60 + now->tm_sec))
-                    <= 60) doNotify = true;
+            if (verbose) std::cout << "  This note has " << specs.size() << " specs total" << std::endl;
+            for (auto & spec: specs) {
+                bool anyTimeMatch = false, allDatesMatch = true;
+                std::cout << "    Spec of size " << spec.size() << std::endl;
+                for (auto & unit: spec) {
+                    if (verbose) std::cout << std::put_time(&unit, "      %Y.%m.%d %R (%A, %B) ");
+                    if (unit.tm_min == -1) {
+                        unit.tm_min = 0;
+                    }
+                    bool timeMatches = (
+                                        ((unit.tm_hour == -1) ||
+                                         unit.tm_hour == now->tm_hour) &&
+                                        unit.tm_min == now->tm_min
+                                        );
+                    
+                    bool dateMatches = (
+                                        (
+                                         (unit.tm_year == -1 || unit.tm_year == now->tm_year) &&
+                                         (unit.tm_mon == -1 || unit.tm_mon == now->tm_mon)
+                                         ) &&
+                                        (
+                                         (unit.tm_mday == -1 || unit.tm_mday == now->tm_mday) &&
+                                         (unit.tm_wday == -1 || unit.tm_wday == now->tm_wday)
+                                        )
+                                        );
+                    
+                    std::cout << "Match: T" << timeMatches << "D" << dateMatches << std::endl;
+                    if (!dateMatches) {
+                        allDatesMatch = false;
+                        break;
+                    }
+                    if (timeMatches) anyTimeMatch = true;
+                }
+                if (verbose) std::cout << "    Match: T" << anyTimeMatch << "D" << allDatesMatch << std::endl;
+                if (allDatesMatch && anyTimeMatch) {
+                    doNotify = true;
+                    break;
+                }
+            }
             if (doNotify) {
                 NotifyNotification* notif = notify_notification_new (NOTE_DUE, n.c_str(), 0);
                 notify_notification_set_timeout(notif, 10000); // 10 seconds
