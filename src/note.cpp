@@ -50,6 +50,7 @@ void Note::del(std::vector<int> numbers) {
     } else {
         std::cout << "You didn't type 'yes', no action is done" << std::endl;
         remove(this->tempFile.c_str());
+        exit(1);
     }
 }
 
