@@ -1,4 +1,4 @@
-# termNote
+# termNote ![](https://travis-ci.org/Terodom/termNote.svg?branch=master)
 
 ## About
 
