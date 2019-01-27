@@ -14,6 +14,7 @@ You will need to have atleast these things:
 -   `gcc 7+`
 -   `argp`
 -   `libnotify`
+-   `catch2`
 
 * * *
 
