@@ -12,57 +12,19 @@ const char* NOTE_DUE = "One of your notes just reached its due time!";
 
 std::unique_ptr<Note> note = std::make_unique<Note>();
 
-bool validTime(int hour, int min) {
-    return hour >= 0 && hour < 24 && min >= 0 && min < 60;
-}
-
 int notifyOnDue(bool verbose) {
     notify_init("termNote");
-    
     while(1) {
         auto notes = note->getList();
         for (auto n: notes) {
-            if (verbose) std::cout << n << std::endl;
-            int i = 0;
-            std::vector<std::vector<struct tm>> specs;
-            std::istringstream ss(n), buf;
-            std::string s;
-
-            
-#define READ_DATE_TO(tovec, fmt)\
-            buf = std::istringstream(s);\
-            unit = {-1, -1, -1, -1, -1, -1, -1, -1, -1};\
-            buf >> std::get_time(&unit, fmt);\
-            if (!buf.fail()) {\
-                read = true;\
-                tovec.push_back(unit);\
-                continue;\
-            }
-#define READ_DATE(fmt) READ_DATE_TO(spec, fmt)
-
-            while (!ss.eof())  {
-                std::vector<tm> spec;
-                ss >> s;
-                bool read;
-                do {
-                    read = false;
-                    tm unit;
-                    READ_DATE("%d.%m.%y");
-                    READ_DATE("%d.%m");
-                    READ_DATE("%R");
-                    READ_DATE("%b");
-                    READ_DATE("%a");
-                } while (read && ss.peek() == ' ' && ss >> s);
-                if (spec.size() > 0) specs.push_back(spec);
-            }
-            if ((n[0] == 'x' && n[1] == ' ') || specs.size() == 0) continue;
+            if (n.completed) continue;
             auto t_now = time(0);
             tm *now = localtime(&t_now);
             bool doNotify = false;
-            if (verbose) std::cout << "  This note has " << specs.size() << " specs total" << std::endl;
-            for (auto & spec: specs) {
+            if (verbose) std::cout << n.description << std::endl;
+            for (auto & spec: n.getNotificationSpecs()) {
                 bool anyTimeMatch = false, allDatesMatch = true;
-                std::cout << "    Spec of size " << spec.size() << std::endl;
+                if (verbose) std::cout << "    Spec of size " << spec.size() << std::endl;
                 for (auto & unit: spec) {
                     if (verbose) std::cout << std::put_time(&unit, "      %Y.%m.%d %R (%A, %B) ");
                     if (unit.tm_min == -1) {
@@ -85,7 +47,7 @@ int notifyOnDue(bool verbose) {
                                         )
                                         );
                     
-                    std::cout << "Match: T" << timeMatches << "D" << dateMatches << std::endl;
+                    if (verbose) std::cout << "Match: T" << timeMatches << "D" << dateMatches << std::endl;
                     if (!dateMatches) {
                         allDatesMatch = false;
                         break;
@@ -99,7 +61,7 @@ int notifyOnDue(bool verbose) {
                 }
             }
             if (doNotify) {
-                NotifyNotification* notif = notify_notification_new (NOTE_DUE, n.c_str(), 0);
+                NotifyNotification* notif = notify_notification_new (NOTE_DUE, n.description.c_str(), 0);
                 notify_notification_set_timeout(notif, 10000); // 10 seconds
                 if (!notify_notification_show(notif, 0)) {
                     std::cerr << "show has failed" << std::endl;
@@ -110,6 +72,7 @@ int notifyOnDue(bool verbose) {
         std::this_thread::sleep_for(std::chrono::seconds(60));
     }
 }
+
 
 static int parseOptions(int key, char *arg,
         struct argp_state *state) {

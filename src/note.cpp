@@ -1,5 +1,88 @@
 #include <algorithm>
+#include <iterator>
+
+#include <chrono>
+#include <ctime>
+#include <iomanip>
 #include "../include/note.hpp"
+
+tm * todoTxtNote::parseTime(std::string s, const char *format) {
+    std::istringstream buf(s);
+    struct tm * unit = (struct tm*) malloc(sizeof(struct tm));
+    unit->tm_year = -1;
+    unit->tm_mon = -1;
+    unit->tm_mday = -1;
+    unit->tm_wday = -1;
+    unit->tm_hour = -1;
+    unit->tm_min = -1;
+    unit->tm_sec = -1;
+    buf >> std::get_time(unit, format);
+    if (!buf.fail()) return unit;
+    else return nullptr;
+}
+
+std::vector< std::vector<tm> > todoTxtNote::getNotificationSpecs() {
+    int i = 0;
+    std::vector<std::vector<struct tm>> specs;
+    std::vector<tm> spec;
+    for (auto & w: words) {
+        tm * cur;
+        if ((cur = parseTime(w, "%R")) ||
+            (cur = parseTime(w, "%H%p")) ||
+            (cur = parseTime(w, "%d.%m.%y")) ||
+            (cur = parseTime(w, "%d.%m")) ||
+            (cur = parseTime(w, "%a")) ||
+            (cur = parseTime(w, "%b"))) {
+            spec.push_back(*cur);
+        }
+        std::string sep = ",./;!%&";
+        if (!cur || sep.find(w[w.size() - 1]) != std::string::npos) {
+            if (spec.size() > 0)
+                specs.push_back(spec);
+            spec.clear();
+        }
+    }
+    if (spec.size() > 0) specs.push_back(spec);
+    return specs;
+}
+
+todoTxtNote::todoTxtNote(std::string raw) {
+    std::istringstream rawstream(raw);
+    words = std::vector<std::string>{std::istream_iterator<std::string>{rawstream},
+                                     std::istream_iterator<std::string>{}};
+    while (words.size() < 5) words.push_back("");
+    short i = 0;
+    if (words[i] == "x") {
+        completed = true;
+        i ++;
+    }
+    if (words[i].size() == 3 && words[i][0] == '(' && words[i][2] == ')') {
+        priority = words[i][1];
+        i ++;
+    }
+
+    tm * time1 = parseTime(words[i], "%Y-%m-%d");
+    tm * time2 = parseTime(words[i + 1], "%Y-%m-%d");
+    
+    if (time1 && time2) {
+        completedAt = time1;
+        createdAt = time2;
+        i += 2;
+    } else if (time1) {
+        createdAt = time1;
+        i ++;
+    } else {
+        time_t now = std::time(0);
+        createdAt = localtime(&now);
+    }
+
+    for (i; i < words.size(); i ++)
+        description += words[i] + ' ';
+}
+
+todoTxtNote::~todoTxtNote() {
+
+}
 
 Note::Note() {
     // Look if termNote directories and files exist, if not then create them
@@ -53,34 +136,25 @@ void Note::del(std::vector<int> numbers) {
         exit(1);
     }
 }
-
-void Note::list() {
+std::vector<todoTxtNote> Note::getList() {
     noteStream.open(file, std::ios::in);
-    int i = 0;
-    while(std::getline(noteStream, line)) {
-        std::string newLine;
-        newLine = line + "\n";
-        std::cout <<"[" << i << "]"<< " " << newLine;
+    std::vector<todoTxtNote> result;
+    while(std::getline(noteStream, line))
+        result.push_back(todoTxtNote(line));
+    noteStream.close();
+    return result;
+}
+
+void Note::list(bool show_completed) {
+    short i = 0;
+    std::vector<todoTxtNote> notes = getList();
+    for (auto note: notes) {
+        if (show_completed || !note.completed)
+            std::cout << '[' << i << ']' << ' ' << note.description << std::endl;
         i++;
     }
-    noteStream.close();
 }
 
 void Note::show(int n) {
-    noteStream.open(file, std::ios::in);
-    int i = 0;
-    while(std::getline(noteStream, line) && i < n) {
-        i++;
-    }
-    std::cout << line << std::endl;
-    noteStream.close();
-}
-
-std::vector<std::string> Note::getList() {
-    noteStream.open(file, std::ios::in);
-    std::vector<std::string> result;
-    while(std::getline(noteStream, line))
-        result.push_back(line);
-    noteStream.close();
-    return result;
+    std::cout << getList()[n].description << std::endl;
 }

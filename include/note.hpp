@@ -20,6 +20,26 @@
 #define XDG_CONFIG_HOME std::getenv("XDG_CONFIG_HOME")
 #define XDG_DATA_HOME std::getenv("XDG_DATA_HOME")
 
+class todoTxtNote {
+private:
+    static tm * parseTime(std::string s, const char* format);
+    std::vector<std::string> words;
+public:
+    bool completed = false;
+    char priority = 'z';
+    tm * createdAt;
+    tm * completedAt;
+    std::string description;
+    
+    std::string toString();
+    
+    std::vector<std::vector<tm>> getNotificationSpecs();
+    std::vector<std::string> getProjects(), getContexts();
+    
+    todoTxtNote(std::string raw);
+    ~todoTxtNote();
+};
+
 class Note {
 private:
     // Filestreams
@@ -40,7 +60,9 @@ public:
     
     void add(char* note);
     void del(std::vector<int> numbers);
-    void list();
+    void list(bool show_completed);
     void show(int n);
-    std::vector<std::string> getList();
+
+    
+    std::vector<todoTxtNote> getList();
 };
