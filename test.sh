@@ -9,5 +9,5 @@ echo -n "Check that adding notes works... "
 bin/termNote -a "This is a test note!"
 [[ $(bin/termNote -l) = *"This is a test note!"* ]] && echo OK || exit 1
 echo -n "Check that deleting notes works... "
-bin/termNote -d 0 && echo OK || exit 1
+echo yes | bin/termNote -d 0 > /dev/null && echo OK || exit 1
 

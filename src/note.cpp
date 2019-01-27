@@ -30,16 +30,28 @@ void Note::del(std::vector<int> numbers) {
     this->tempStream.open(this->tempFile, std::ios::out);
     int i = 0;
     int j = 0;
+    std::cout << "These notes are going to be deleted:" << std::endl;
     while(std::getline(noteStream, line)) {
-        if(i != numbers[j]) {
-            tempStream << line << "\n";
-        } else j++;
+        if(i != numbers[j]) tempStream << line << "\n";
+        else {
+            j++;
+            std::cout << '[' << i << ']' << ' ' << line << std::endl;
+        }
         i++;
     }
     noteStream.close();
     tempStream.close();
-    remove(this->file.c_str());
-    rename(this->tempFile.c_str(),this->file.c_str());
+    std::cout << "Type 'yes' if you would like to confirm. >>> ";
+    std::string answer;
+    std::cin >> answer;
+    if (answer == "yes") {
+        remove(this->file.c_str());
+        rename(this->tempFile.c_str(), this->file.c_str());
+    } else {
+        std::cout << "You didn't type 'yes', no action is done" << std::endl;
+        remove(this->tempFile.c_str());
+        exit(1);
+    }
 }
 
 void Note::list() {
