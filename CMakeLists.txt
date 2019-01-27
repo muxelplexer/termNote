@@ -10,8 +10,9 @@ find_package(Catch2)
 
 set(COMMON "src/note.cpp")
 
-# Main executable (termNote)
-set(CMAKE_CXX_FLAGS "-std=c++17")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 add_executable(termNote src/main.cpp ${COMMON})
 target_link_libraries(${PROJECT_NAME} stdc++fs)
