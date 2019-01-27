@@ -6,6 +6,11 @@ include_directories(include)
 find_package(PkgConfig)
 pkg_check_modules(LIBNOTIFY QUIET libnotify)
 
+
+
+find_package(Catch2)
+
+
 set(COMMON "src/note.cpp")
 
 include_directories(${LIBNOTIFY_INCLUDE_DIRS})
@@ -16,9 +21,19 @@ set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 add_executable(termNote src/main.cpp ${COMMON})
 add_executable(noted src/noted.cpp ${COMMON})
+
+
+enable_testing()
+
+if (Catch2_FOUND)
+   add_executable(unitTest test/main.cpp ${COMMON})
+   target_link_libraries(unitTest stdc++fs Catch2::Catch2)
+   add_test(main bin/unitTest)
+endif ()
+
+
 target_link_libraries(${PROJECT_NAME} stdc++fs)
 target_link_libraries(noted stdc++fs ${LIBNOTIFY_LIBRARIES})
-
 
 install(TARGETS termNote noted DESTINATION bin)
 
