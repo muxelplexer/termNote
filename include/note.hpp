@@ -27,8 +27,8 @@ private:
 public:
     bool completed = false;
     char priority = 'z';
-    tm * createdAt;
-    tm * completedAt;
+    tm * createdAt = nullptr;
+    tm * completedAt = nullptr;
     std::string description;
     
     std::string toString();
@@ -62,7 +62,7 @@ public:
     void del(std::vector<int> numbers);
     void list(bool show_completed);
     void show(int n);
-
+    void complete(int n);
     
     std::vector<todoTxtNote> getList();
 };

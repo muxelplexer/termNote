@@ -20,6 +20,9 @@ static int parseOptions(int key, char *arg,
         case 's':
             note->show(std::strtol(arg, nullptr, 0));
             break;
+        case 'c':
+            note->complete(std::strtol(arg, nullptr, 0));
+            break;
         case 'd':
             std::vector<int> numbers;
             std::stringstream ss(arg);
@@ -48,6 +51,7 @@ int main(int argc, char **argv) {
         {"show-completed", 'x', 0, 0, "Show entries that are marked as completed while listing"},
         {"list", 'l', 0, 0, "List all entries"},
         {"show", 's', "int", 0, "Show [n]th entry"},
+        {"complete", 'c', "int", 0, "Mark [n]th entry as completed"},
         { 0 }
         };
         struct argp argp = { options, parseOptions };

@@ -80,6 +80,26 @@ todoTxtNote::todoTxtNote(std::string raw) {
         description += words[i] + ' ';
 }
 
+std::string todoTxtNote::toString() {
+    std::string result;
+    if (completed) result += "x ";
+    result += "(";
+    result += priority;
+    result += ")";
+    if (completedAt) {
+        std::ostringstream ss;
+        ss << std::put_time(completedAt, "%Y-%m-%d");
+        result += ' ' + ss.str();
+    }
+    if (createdAt) {
+        std::ostringstream ss;
+        ss << std::put_time(createdAt, "%Y-%m-%d");
+        result += ' ' + ss.str();
+    }
+    result += " " + description;
+    return result;
+}
+
 todoTxtNote::~todoTxtNote() {
 
 }
@@ -103,8 +123,10 @@ Note::~Note() {
 }
 
 void Note::add(char* note) {
-    this->noteStream.open(this->file, std::ios::app);
-    noteStream << note << std::endl;
+    noteStream.open(this->file, std::ios::app);
+    todoTxtNote parsedNote(note);
+    noteStream << parsedNote.toString() << std::endl;
+    noteStream.close();
 }
 
 void Note::del(std::vector<int> numbers) {
@@ -157,4 +179,22 @@ void Note::list(bool show_completed) {
 
 void Note::show(int n) {
     std::cout << getList()[n].description << std::endl;
+}
+
+
+void Note::complete(int n) {
+    std::vector<todoTxtNote> notes = getList();
+    if (notes[n].completed) {
+        notes[n].completed = false;
+        notes[n].completedAt = nullptr;
+    } else {
+        notes[n].completed = true;
+        time_t now = std::time(0);
+        notes[n].completedAt = localtime(&now);
+    }
+    tempStream.open(tempFile, std::ios::out);
+    for (auto note: notes) tempStream << note.toString() << std::endl;
+    tempStream.close();
+    remove(file.c_str());
+    rename(tempFile.c_str(), file.c_str());
 }
