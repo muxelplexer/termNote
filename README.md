@@ -41,13 +41,16 @@ cd termNote
 nix-build
 ```
 
-#### Building distribution-independent bundles
+#### Building distribution-independent executables (nix bundles)
 ```bash
 nix-build -A bundles.termNote
 nix-build -A bundles.noted
 ```
 
-#### Building AppImages **(Currently broken, do not use!)**
+#### Building AppImages 
+
+**This is currently broken and it takes a long time to build. Build it only if you are ready to create a fix**
+
 ```bash
 nix-build -A AppImages.termNote
 nix-build -A AppImages.noted
