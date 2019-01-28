@@ -41,6 +41,21 @@ cd termNote
 nix-build
 ```
 
+#### Building distribution-independent executables (nix bundles)
+```bash
+nix-build -A bundles.termNote
+nix-build -A bundles.noted
+```
+
+#### Building AppImages 
+
+**This is currently broken and it takes a long time to build. Build it only if you are ready to create a fix**
+
+```bash
+nix-build -A AppImages.termNote
+nix-build -A AppImages.noted
+```
+
 ### Source
 
 ```bash
@@ -58,7 +73,7 @@ Run `./test.sh` in any POSIX-copmliant shell to run tests. This is done automati
 
 ## Usage
 ### `termNote` (The main utility)
-`termNote` is used to manipulate (`--add -a`, `--delete -d`, `--list -l`, `--show -s`) notes.
+`termNote` is used to manipulate (`--add -a`, `--delete -d`, `--list -l`, `--show -s`, `--complete -c`) notes.
 Entries are kept in `$XDG_DATA_HOME/termNote/notes` (or `$HOME/.termNote/notes` if you don't use XDG). Configuration is (going to) be kept in `$XDG_CONFIG_HOME/termNote/config`. Default option is `--list`.
 ### `noted` (The note daemon)
 `noted` is a notification daemon that uses `libnotify` to send you messages about due dates. It tries to guess what date and time you've meant (see #8 #15 for details). It forks by default (meaning it's safe to use in startup scripts), but you can make it stay in foreground by using `-f`. `-v` is mostly used for debugging.
