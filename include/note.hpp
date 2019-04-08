@@ -16,6 +16,8 @@
 #include <cstdlib>	/* getenv */
 #include <vector>
 
+#include "./config.hpp"
+
 #define HOME std::getenv("HOME")
 #define XDG_CONFIG_HOME std::getenv("XDG_CONFIG_HOME")
 #define XDG_DATA_HOME std::getenv("XDG_DATA_HOME")

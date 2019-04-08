@@ -146,16 +146,21 @@ void Note::del(std::vector<int> numbers) {
     }
     noteStream.close();
     tempStream.close();
-    std::cout << "Type 'yes' if you would like to confirm. >>> ";
-    std::string answer;
-    std::cin >> answer;
-    if (answer == "yes") {
+    if (cfg::askBeforeDelete) {
+        std::cout << "Type 'yes' if you would like to confirm. >>> ";
+        std::string answer;
+        std::cin >> answer;
+        if (answer == "yes" || answer == "y" || answer == "Y") {
+            remove(this->file.c_str());
+            rename(this->tempFile.c_str(), this->file.c_str());
+        } else {
+            std::cout << "You didn't type 'yes', no action is done" << std::endl;
+            remove(this->tempFile.c_str());
+            exit(1);
+        }
+    } else {
         remove(this->file.c_str());
         rename(this->tempFile.c_str(), this->file.c_str());
-    } else {
-        std::cout << "You didn't type 'yes', no action is done" << std::endl;
-        remove(this->tempFile.c_str());
-        exit(1);
     }
 }
 std::vector<todoTxtNote> Note::getList() {
