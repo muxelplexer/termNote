@@ -164,41 +164,6 @@ void Note::del(std::vector<int> numbers) {
         rename(this->tempFile.c_str(), this->file.c_str());
     }
 }
-void Note::del(std::vector<int> numbers) {
-    std::sort(numbers.begin(), numbers.end());
-    this->noteStream.open(this->file, std::ios::in);
-    this->tempStream.open(this->tempFile, std::ios::out);
-    int i = 0;
-    int j = 0;
-    std::cout << "These notes are going to be deleted:" << std::endl;
-    while(std::getline(noteStream, line)) {
-        if(i != numbers[j]) tempStream << line << "\n";
-        else {
-            j++;
-            std::cout << '[' << i << ']' << ' ' << line << std::endl;
-        }
-        i++;
-    }
-
-    noteStream.close();
-    tempStream.close();
-    if (cfg::askBeforeDelete) {
-        std::cout << "Type 'yes' if you would like to confirm. >>> ";
-        std::string answer;
-        std::cin >> answer;
-        if (answer == "yes" || answer == "y" || answer == "Y") {
-            remove(this->file.c_str());
-            rename(this->tempFile.c_str(), this->file.c_str());
-        } else {
-            std::cout << "You didn't type 'yes', no action is done" << std::endl;
-            remove(this->tempFile.c_str());
-            exit(1);
-        }
-    } else {
-        remove(this->file.c_str());
-        rename(this->tempFile.c_str(), this->file.c_str());
-    }
-}
 std::vector<todoTxtNote> Note::getList() {
     noteStream.open(file, std::ios::in);
     std::vector<todoTxtNote> result;
