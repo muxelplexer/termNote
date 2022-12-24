@@ -1,4 +1,5 @@
 #include "termNote/NoteManager.hpp"
+#include <algorithm>
 #include <exception>
 #include <fstream>
 #include <iostream>
@@ -71,6 +72,46 @@ namespace termnote
     {
         if (idx > this->m_Notes.size()) throw new std::runtime_error("Index out of Range.");
         this->m_Notes.erase(this->m_Notes.begin() + idx);
+    }
+
+    void NoteManager::rem_notes(std::vector<std::size_t>& idxs)
+    {
+        std::sort(idxs.begin(), idxs.end());
+
+        std::for_each(idxs.crbegin(), idxs.crend(), [&notes = this->m_Notes](const std::size_t i){
+            notes.erase(notes.begin() + i);
+        });
+    }
+
+    std::vector<std::size_t> NoteManager::parse_rem_input(const std::string& input) const
+    {
+        std::stringstream istr(input);
+        std::vector<std::size_t> numbers;
+        std::size_t num = 0;
+
+        bool is_range = false;
+        for (auto i = 0; istr << num; i++)
+        {
+            if (is_range)
+            {
+                int num_start = numbers[i] + 1;
+                while (num_start <= num)
+                {
+                    numbers.push_back(num_start);
+                }
+                is_range = false;
+            }
+            else if (istr.peek() == ',') istr.ignore();
+            else if (istr.peek() == '-') 
+            {
+                is_range = true;
+            }
+            else
+            {
+                numbers.push_back(num);
+            }
+        }
+        return numbers;
     }
 
     void NoteManager::write_notes(std::ostream& ostr) noexcept

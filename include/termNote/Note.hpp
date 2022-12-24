@@ -18,7 +18,7 @@ namespace termnote
         [[nodiscard]] inline const bool get_completed() const { return this->m_Completed; };
         [[nodiscard]] inline std::string_view get_description() { return this->m_Description; };
 
-        std::string to_string();
-        const std::string to_string() const;
+        [[nodiscard]] std::string to_string();
+        [[nodiscard]] const std::string to_string() const;
     };
 }
