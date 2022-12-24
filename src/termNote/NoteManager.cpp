@@ -25,6 +25,7 @@ namespace termnote
     NoteManager::~NoteManager()
     {
         std::ofstream ofstr(this->m_NoteFile);
+        ofstr.clear();
         for (auto& note : this->m_Notes)
         {
             ofstr << note.get_description() << '\n';
@@ -94,7 +95,7 @@ namespace termnote
         {
             if (is_range)
             {
-                int num_start = numbers[i] + 1;
+                int num_start = numbers[i-1];
                 while (num_start <= num)
                 {
                     numbers.push_back(num_start);
