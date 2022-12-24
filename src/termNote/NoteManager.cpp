@@ -1,7 +1,9 @@
 #include "termNote/NoteManager.hpp"
 #include <algorithm>
+#include <cctype>
 #include <exception>
 #include <fstream>
+#include <iterator>
 #include <iostream>
 
 namespace termnote
@@ -91,28 +93,27 @@ namespace termnote
         std::size_t num = 0;
 
         bool is_range = false;
-        for (auto i = 0; istr >> num; i++)
+        for (std::string::const_iterator it = input.begin(); it != input.end(); it++)
         {
-            if (is_range)
-            {
-                int num_start = numbers[i-1];
-                while (num_start <= num)
-                {
-                    numbers.push_back(num_start);
-                }
-                is_range = false;
-            }
-            else if (istr.peek() == ',') istr.ignore();
-            else if (istr.peek() == '-') 
+            auto& ch = *it;
+            if (ch == ',') it++;
+            else if (ch == '-') 
             {
                 is_range = true;
-                istr.ignore();
+                it++;
             }
-            else
+            else if (std::isdigit(ch)) 
             {
+                num = static_cast<int>(ch);
+                if (is_range)
+                {
+                    for (auto i = numbers.back(); i < num; i++)
+                        numbers.push_back(i);
+                }
                 numbers.push_back(num);
             }
         }
+
         return numbers;
     }
 
