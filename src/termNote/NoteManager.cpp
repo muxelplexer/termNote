@@ -105,6 +105,7 @@ namespace termnote
             else if (istr.peek() == '-') 
             {
                 is_range = true;
+                istr.ignore();
             }
             else
             {
