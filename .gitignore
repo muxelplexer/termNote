@@ -9,7 +9,6 @@ compile_commands.json
 CTestTestfile.cmake
 .vscode
 .dir-locals.el
-*~
-\#*\#c
-.\#*
+.vs/
 result/
+out/
