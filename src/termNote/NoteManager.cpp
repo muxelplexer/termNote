@@ -90,7 +90,7 @@ namespace termnote
         std::size_t num = 0;
 
         bool is_range = false;
-        for (auto i = 0; istr << num; i++)
+        for (auto i = 0; istr >> num; i++)
         {
             if (is_range)
             {
