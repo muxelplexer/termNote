@@ -35,7 +35,7 @@ namespace termnote
     {
         fs::path path;
         auto xdg_dir = std::getenv("XDG_DATA_HOME");
-        if (xdg_dir) path = path / "termNote/";
+        if (xdg_dir) path = fs::path(xdg_dir) / "termNote/";
         else path = fs::path(std::getenv("HOME")) / ".termNote/";
 
         return path;
