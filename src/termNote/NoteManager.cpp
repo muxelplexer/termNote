@@ -94,12 +94,11 @@ namespace termnote
         bool is_range = false;
         for (std::string::const_iterator it = input.begin(); it != input.end(); it++)
         {
-            const auto& ch = *it;
-            if (ch == ',') it++;
+            auto ch = *it;
+            if (ch == ',');
             else if (ch == '-') 
             {
                 is_range = true;
-                it++;
             }
             else if (std::isdigit(ch)) 
             {
