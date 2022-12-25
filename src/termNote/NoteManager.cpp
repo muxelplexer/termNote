@@ -88,7 +88,6 @@ namespace termnote
 
     std::vector<std::size_t> NoteManager::parse_rem_input(const std::string& input) const
     {
-        std::stringstream istr(input);
         std::vector<std::size_t> numbers;
         std::size_t num = 0;
 
