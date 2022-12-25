@@ -95,7 +95,7 @@ namespace termnote
         bool is_range = false;
         for (std::string::const_iterator it = input.begin(); it != input.end(); it++)
         {
-            auto& ch = *it;
+            const auto& ch = *it;
             if (ch == ',') it++;
             else if (ch == '-') 
             {
@@ -104,7 +104,7 @@ namespace termnote
             }
             else if (std::isdigit(ch)) 
             {
-                num = static_cast<int>(ch);
+                num = static_cast<std::size_t>(ch);
                 if (is_range)
                 {
                     for (auto i = numbers.back(); i < num; i++)
