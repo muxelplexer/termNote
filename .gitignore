@@ -13,3 +13,5 @@ CTestTestfile.cmake
 \#*\#c
 .\#*
 result/
+build/
+bin/
