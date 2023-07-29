@@ -1,5 +1,7 @@
 add_executable(termNote
+    src/file_backend.cpp
     src/main.cpp
+    src/notebook.cpp
 )
 
 target_include_directories(termNote PRIVATE inc/)

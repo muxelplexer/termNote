@@ -1,7 +1,21 @@
+#include <cstdlib>
 #include <iostream>
 
-int main()
+#include "file_backend.hpp"
+#include "notebook.hpp"
+
+int main(int argc, const char** argv)
 {
-    std::cout << "Hello, World!\n";
+    termnote::file_backend back;
+    termnote::notebook book{&back};
+
+    book.add_note("This is a Test!");
+
+    for (const auto& note : book.get_notes())
+    {
+        std::cout << note << "\n";
+    }
+
+    book.write();
     return 0;
 }
