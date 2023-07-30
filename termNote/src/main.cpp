@@ -42,12 +42,16 @@ int main(int argc, const char** argv)
         termnote::file_backend back;
         termnote::notebook book{&back};
 
-        if (program.is_subcommand_used("list"))
-        {
+        auto list_notes = [&book] () {
             for (const auto& [idx, note] : book.get_notes() | std::views::enumerate)
             {
                 std::cout << "[" << idx << "] " << note << "\n";
             }
+        };
+
+        if (program.is_subcommand_used("list"))
+        {
+            list_notes();
         } else if (program.is_subcommand_used("add"))
         {
             book.add_note(add_cmd.get("note"));
@@ -58,6 +62,9 @@ int main(int argc, const char** argv)
 
             book.delete_note(note_id);
             book.write();
+        } else 
+        {
+            list_notes();
         }
     } catch (const std::runtime_error& err)
     {
