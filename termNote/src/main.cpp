@@ -54,7 +54,7 @@ int main(int argc, const char** argv)
             book.write();
         } else if (program.is_subcommand_used("delete"))
         {
-            auto& note_id = del_cmd.get<int>("note_id");
+            auto& note_id = del_cmd.get<size_t>("note_id");
 
             book.delete_note(note_id);
             book.write();
