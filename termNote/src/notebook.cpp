@@ -1,4 +1,5 @@
 #include "notebook.hpp"
+#include <iostream>
 
 namespace termnote
 {
@@ -9,12 +10,13 @@ namespace termnote
 
     void notebook::delete_note(const size_t n)
     {
+        if (n > this->m_Notes.size() - 1)
+        {
+            std::cerr << "Index too big.\n";
+            return;
+        }
 
-    }
-
-    std::string& notebook::get_note(const size_t n)
-    {
-
+        this->m_Notes.erase(this->m_Notes.begin() + n);
     }
 
     const std::vector<std::string>& notebook::get_notes() const

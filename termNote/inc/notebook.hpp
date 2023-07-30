@@ -33,7 +33,6 @@ namespace termnote
 
         void add_note(const std::string& view);
         void delete_note(const size_t n);
-        std::string& get_note(const size_t n);
         const std::vector<std::string>& get_notes() const;
         inline void write()
         {

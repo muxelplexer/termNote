@@ -47,7 +47,6 @@ namespace termnote
         
         for (const auto& str : notes)
         {
-            std::cout << str << "\n";
             ofs << str << "\n";
         }
 

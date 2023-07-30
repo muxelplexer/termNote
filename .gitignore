@@ -16,3 +16,4 @@ result/
 build/
 bin/
 .cache/
+termNote/inc/version.hpp
