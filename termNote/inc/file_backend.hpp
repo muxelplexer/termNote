@@ -16,6 +16,11 @@ namespace termnote
         virtual std::vector<std::string> read_notes() override;
         virtual void write_notes(const std::vector<std::string> notes) override;
 
+        inline const std::string& get_config_path() const
+        {
+            return this->m_ConfigPath;
+        }
+
 
     private:
         std::string m_ConfigPath;
