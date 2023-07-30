@@ -1,40 +1,25 @@
-cmake_minimum_required(VERSION 3.6)
-project(termNote)
+cmake_minimum_required(VERSION 3.24)
 
-include_directories(include)
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/ext/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "")
 
-find_package(PkgConfig)
-pkg_check_modules(LIBNOTIFY QUIET libnotify)
+project(termNote
+   VERSION 2.0.0
+)
 
-find_package(Catch2)
+add_subdirectory(termNote)
 
-set(COMMON "src/note.cpp")
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-add_executable(termNote src/main.cpp ${COMMON})
-target_link_libraries(${PROJECT_NAME} stdc++fs)
-install(TARGETS termNote DESTINATION bin)
-
-
-# noted
-if (LIBNOTIFY_FOUND)
-   include_directories(${LIBNOTIFY_INCLUDE_DIRS})
-   link_directories(${LIBNOTIFY_LIBRARY_DIRS})
-   add_definitions(${LIBNOTIFY_CFLAGS})
-   add_executable(noted src/noted.cpp ${COMMON})
-   target_link_libraries(noted stdc++fs ${LIBNOTIFY_LIBRARIES})
-   install(TARGETS noted DESTINATION bin)
-endif()
-
-# unit tests
+find_package(Catch2 CONFIG)
 enable_testing()
 if (Catch2_FOUND)
-   add_executable(unitTest test/main.cpp ${COMMON})
-   target_link_libraries(unitTest stdc++fs Catch2::Catch2)
-   add_test(main bin/unitTest)
-endif ()
-
+   add_executable(termNote-test 
+      termNote/src/file_backend.cpp
+      termNote/src/notebook.cpp
+      test/main.cpp
+   )
+   target_include_directories(termNote-test PRIVATE
+      termNote/inc/
+      target_link_libraries(termNote-test PRIVATE Catch2::Catch2)
+   )
+   add_test(main ${CMAKE_BINARY_DIR}/termNote-test)
+endif()
 

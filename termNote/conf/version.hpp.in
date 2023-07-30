@@ -1,0 +1,14 @@
+#pragma once
+#include <string_view>
+
+namespace termnote
+{
+    namespace version
+    {
+        static constexpr std::string_view string{"@PROJECT_VERSION@"};
+        static constexpr int major = @PROJECT_VERSION_MAJOR@;
+        static constexpr int minor = @PROJECT_VERSION_MINOR@;
+        static constexpr int path = @PROJECT_VERSION_PATCH@;
+
+    }
+}

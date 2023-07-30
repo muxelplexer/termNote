@@ -1,0 +1,6 @@
+{
+    "dependencies": [
+        "argparse",
+        "catch2"
+    ]
+}
