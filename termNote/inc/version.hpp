@@ -9,6 +9,5 @@ namespace termnote
         static constexpr int major = 2;
         static constexpr int minor = 0;
         static constexpr int path = 0;
-
     }
 }

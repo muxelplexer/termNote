@@ -9,6 +9,5 @@ namespace termnote
         static constexpr int major = @PROJECT_VERSION_MAJOR@;
         static constexpr int minor = @PROJECT_VERSION_MINOR@;
         static constexpr int path = @PROJECT_VERSION_PATCH@;
-
     }
 }

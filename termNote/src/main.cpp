@@ -17,6 +17,7 @@ int main(int argc, const char** argv)
     add_cmd.add_description("Adds note to the Database.");
     add_cmd.add_argument("note")
         .default_value(std::string(""))
+        .required()
         .remaining();
 
 
