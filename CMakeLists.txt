@@ -10,6 +10,7 @@ set(WITH_TESTS CACHE BOOL FALSE)
 
 add_subdirectory(notiz)
 add_subdirectory(termNote)
+add_subdirectory(noted)
 
 if(WITH_TESTS)
    find_package(Catch2 CONFIG)
