@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <ranges>
 
 #include "file_backend.hpp"
@@ -10,7 +11,9 @@
 
 namespace argp = argparse;
 
-int main(int argc, const char** argv)
+#include "command.hpp"
+
+std::unique_ptr<termnote::command> parse_commandline(termnote::notebook& book, const int argc, const char** argv)
 {
     argp::ArgumentParser program("termNote", std::string(termnote::version::string));
     argp::ArgumentParser add_cmd("add");
@@ -40,39 +43,37 @@ int main(int argc, const char** argv)
     try 
     {
         program.parse_args(argc, argv);
-        termnote::file_backend back;
-        termnote::notebook book{&back};
-
-        auto list_notes = [&book] () {
-            for (const auto& [idx, note] : book.get_notes() | std::views::enumerate)
-            {
-                std::cout << "[" << idx << "] " << note << "\n";
-            }
-        };
-
         if (program.is_subcommand_used("list"))
         {
-            list_notes();
+            return std::make_unique<termnote::list_command>();
         } else if (program.is_subcommand_used("add"))
         {
-            book.add_note(add_cmd.get("note"));
-            book.write();
+            return std::make_unique<termnote::add_command>(add_cmd.get("note"));
         } else if (program.is_subcommand_used("delete"))
         {
-            auto& note_id = del_cmd.get<size_t>("note_id");
-
-            book.delete_note(note_id);
-            book.write();
-        } else 
-        {
-            list_notes();
+            return std::make_unique<termnote::delete_command>(del_cmd.get<size_t>("note_id"));
         }
+
+        return std::make_unique<termnote::list_command>();
     } catch (const std::runtime_error& err)
     {
         std::cerr << err.what() << "\n";
         std::cerr << program;
-        return 1;
+        return nullptr;
     }
+
+}
+
+int main(int argc, const char** argv)
+{
+    termnote::file_backend back;
+    termnote::notebook book{&back};
+
+    auto cmd = parse_commandline(book, argc, argv);
+
+    if (cmd == nullptr) return 1;
+
+    cmd->execute(book);
 
     return 0;
 }

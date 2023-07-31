@@ -5,6 +5,7 @@
 #include <string_view>
 
 #include "backend.hpp"
+#include "note.hpp"
 
 namespace termnote
 {
@@ -13,8 +14,8 @@ namespace termnote
     public:
         file_backend(const std::string alt_config_path = "");
 
-        virtual std::vector<std::string> read_notes() override;
-        virtual void write_notes(const std::vector<std::string> notes) override;
+        virtual std::vector<termnote::note> read_notes() override;
+        virtual void write_notes(const std::vector<termnote::note>& notes) override;
 
         inline const std::string& get_config_path() const
         {

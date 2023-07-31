@@ -1,7 +1,9 @@
 #include "file_backend.hpp"
+#include "note.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 namespace fs = std::filesystem;
 namespace termnote
@@ -27,9 +29,9 @@ namespace termnote
         }
     }
 
-    std::vector<std::string> file_backend::read_notes()
+    std::vector<termnote::note> file_backend::read_notes()
     {
-        std::vector<std::string> notes{};
+        std::vector<termnote::note> notes{};
         auto path = fs::path(m_ConfigPath) / NOTE_FILE;
         std::ifstream ifs{path};
 
@@ -40,14 +42,14 @@ namespace termnote
         return notes;
     }
 
-    void file_backend::write_notes(const std::vector<std::string> notes)
+    void file_backend::write_notes(const std::vector<termnote::note>& notes)
     {
         auto path = fs::path(m_ConfigPath) / NOTE_FILE;
         std::ofstream ofs{path, std::ios::trunc};
         
-        for (const auto& str : notes)
+        for (const auto& note : notes)
         {
-            ofs << str << "\n";
+            ofs << note.body() << "\n";
         }
 
         ofs.close();

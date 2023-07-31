@@ -1,5 +1,10 @@
 #include "notebook.hpp"
+#include "note.hpp"
+#include <algorithm>
 #include <iostream>
+#include <ranges>
+
+#include "command.hpp"
 
 namespace termnote
 {
@@ -19,8 +24,14 @@ namespace termnote
         this->m_Notes.erase(this->m_Notes.begin() + n);
     }
 
-    const std::vector<std::string>& notebook::get_notes() const
+    std::vector<std::string_view> notebook::get_notes() const
     {
-        return this->m_Notes;
+        auto test = m_Notes | std::views::transform(&termnote::note::body);
+        return {test.begin(), test.end()};
+    }
+
+    void notebook::run_command(std::unique_ptr<termnote::command>& cmd)
+    {
+        cmd->execute(*this);
     }
 }
