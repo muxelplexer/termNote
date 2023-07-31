@@ -6,16 +6,21 @@ project(termNote
    VERSION 2.0.0
 )
 
+set(WITH_TESTS CACHE BOOL FALSE)
+
 add_subdirectory(notiz)
 add_subdirectory(termNote)
 
-find_package(Catch2 CONFIG)
-enable_testing()
-if (Catch2_FOUND)
-   add_executable(termNote-test 
-      test/main.cpp
-   )
-   target_link_libraries(termNote-test PRIVATE notiz Catch2::Catch2)
-   add_test(main ${CMAKE_BINARY_DIR}/termNote-test)
+if(WITH_TESTS)
+   find_package(Catch2 CONFIG)
+   enable_testing()
+   if (Catch2_FOUND)
+      add_executable(termNote-test 
+         test/backend.cpp
+      )
+      target_compile_features(termNote-test PRIVATE cxx_std_23)
+      target_link_libraries(termNote-test PRIVATE notiz Catch2::Catch2WithMain)
+      add_test("Backend Tests" ${CMAKE_BINARY_DIR}/termNote-test)
+   endif()
 endif()
 
